@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-on-background font-sans;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #e5e7eb;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #9ca3af;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #24389c;
+  }
+
+  /* Firefox scrollbar */
+  * {
+    scrollbar-color: #9ca3af #e5e7eb;
+    scrollbar-width: thin;
+  }
+}
+
+/* Material Symbols font setup */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 20px rgba(99, 220, 180, 0.5);
+  }
+  50% {
+    opacity: 0.8;
+    box-shadow: 0 0 40px rgba(99, 220, 180, 0.8);
+  }
+}
+
+@layer utilities {
+  .fade-up {
+    @apply animate-fadeUp;
+  }
+
+  .glow-btn {
+    @apply transition-all duration-200 hover:shadow-lg hover:shadow-[#63dcb4]/50;
+  }
+
+  .pulse-glow {
+    @apply animate-pulse-glow;
+  }
+}

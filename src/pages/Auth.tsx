@@ -28,6 +28,8 @@ export default function Auth() {
   const [success, setSuccess] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [showForgot, setShowForgot] = useState(false)
+  const [forgotEmail, setForgotEmail] = useState('')
 
   const calculateStrength = (pwd: string) => {
     if (!pwd) return { level: 0, label: '', color: 'bg-outline-variant', percent: 0 }
@@ -113,6 +115,28 @@ export default function Auth() {
     setSuccess('')
     setShowPassword(false)
     setShowConfirmPassword(false)
+    setShowForgot(false)
+    setForgotEmail('')
+  }
+
+  const handleForgotPassword = async () => {
+    if (!forgotEmail) {
+      toast.error('Please enter your email')
+      return
+    }
+    setLoading(true)
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail, {
+        redirectTo: `${window.location.origin}/auth/reset-password`,
+      })
+      if (error) throw error
+      toast.success('Password reset link sent! Check your email.')
+      setShowForgot(false)
+      setForgotEmail('')
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to send reset link')
+    }
+    setLoading(false)
   }
 
   return (
@@ -131,11 +155,43 @@ export default function Auth() {
 
         {/* Card */}
         <div className="bg-surface-container-low border border-outline-variant rounded-2xl p-8 shadow-sm">
-          <h2 className="font-headline-md text-headline-md font-bold mb-6 text-on-background">
-            {isLogin ? 'Welcome back' : 'Create account'}
-          </h2>
+          {showForgot ? (
+            <>
+              <h2 className="font-headline-md text-headline-md font-bold mb-6 text-on-background">Reset Password</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="text-xs text-on-surface-variant mb-1 block font-label-md">Email</label>
+                  <input
+                    type="email"
+                    value={forgotEmail}
+                    onChange={e => setForgotEmail(e.target.value)}
+                    placeholder="you@example.com"
+                    disabled={loading}
+                    onKeyDown={e => e.key === 'Enter' && handleForgotPassword()}
+                    className="w-full bg-surface-container border border-outline-variant rounded-xl px-4 py-3 text-sm text-on-surface placeholder-on-surface-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all disabled:opacity-50"
+                  />
+                </div>
+                <button
+                  onClick={handleForgotPassword}
+                  disabled={loading || !forgotEmail}
+                  className="w-full bg-primary text-on-primary font-bold py-3 rounded-xl hover:opacity-90 transition-all duration-150 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  {loading ? 'Please wait...' : 'Send Reset Link'}
+                </button>
+                <p className="text-center text-on-surface-variant text-sm mt-4">
+                  <button onClick={() => setShowForgot(false)} className="text-primary hover:underline font-semibold">
+                    Back to sign in
+                  </button>
+                </p>
+              </div>
+            </>
+          ) : (
+            <>
+              <h2 className="font-headline-md text-headline-md font-bold mb-6 text-on-background">
+                {isLogin ? 'Welcome back' : 'Create account'}
+              </h2>
 
-          <div className="space-y-4">
+              <div className="space-y-4">
             {/* Email */}
             <div>
               <label className="text-xs text-on-surface-variant mb-1 block font-label-md">Email</label>
@@ -234,7 +290,18 @@ export default function Auth() {
             </button>
           </div>
 
-          <p className="text-center text-on-surface-variant text-sm mt-6">
+          {isLogin && (
+            <p className="text-center text-on-surface-variant text-sm mt-4">
+              <button
+                onClick={() => setShowForgot(true)}
+                disabled={loading}
+                className="text-primary hover:underline disabled:opacity-50 font-semibold"
+              >
+                Forgot password?
+              </button>
+            </p>
+          )}
+          <p className="text-center text-on-surface-variant text-sm mt-4">
             {isLogin ? "Don't have an account? " : 'Already have an account? '}
             <button
               onClick={toggleMode}
@@ -244,6 +311,8 @@ export default function Auth() {
               {isLogin ? 'Sign up' : 'Sign in'}
             </button>
           </p>
+          </>
+        )}
         </div>
       </div>
     </div>

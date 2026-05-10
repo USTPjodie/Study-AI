@@ -4,6 +4,7 @@ import { supabase } from './lib/supabase'
 import Auth from './pages/Auth'
 import Chat from './pages/Chat'
 import AuthCallback from './pages/AuthCallback'
+import ResetPassword from './pages/ResetPassword'
 import NotFound from './pages/NotFound'
 import ErrorBoundary from './components/ErrorBoundary'
 import type { Session } from '@supabase/supabase-js'
@@ -37,6 +38,7 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/auth/callback" element={<AuthCallback />} />
+      <Route path="/auth/reset-password" element={<ResetPassword />} />
       <Route path="/auth" element={session ? <Navigate to="/" replace /> : <Auth />} />
       <Route path="/" element={session ? <Chat session={session} /> : <Navigate to="/auth" replace />} />
       <Route path="*" element={<NotFound />} />

@@ -12,6 +12,17 @@ export default function AuthCallback() {
       try {
         const params = new URLSearchParams(window.location.search)
         const code = params.get('code')
+        const type = params.get('type')
+
+        if (type === 'recovery') {
+          if (code) {
+            const { error } = await supabase.auth.exchangeCodeForSession(code)
+            if (error) throw error
+          }
+          toast.success('Please set your new password.')
+          navigate('/auth/reset-password', { replace: true })
+          return
+        }
 
         if (code) {
           const { error } = await supabase.auth.exchangeCodeForSession(code)

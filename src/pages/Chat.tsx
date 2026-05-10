@@ -78,6 +78,12 @@ export default function Chat({ session }: { session: Session }) {
   }
 
   const newSession = async () => {
+    // If current session exists and is empty (no messages sent yet), just reset view
+    if (currentSessionId && messages.length === 0) {
+      setSidebarOpen(false)
+      return
+    }
+
     try {
       const { data, error } = await supabase
         .from('chat_sessions')

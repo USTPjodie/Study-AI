@@ -360,18 +360,6 @@ export default function Chat({ session }: { session: Session }) {
                 </button>
               ))}
             </div>
-            <button
-              onClick={() => toast.info('Notifications coming soon')}
-              className="p-base rounded-full hover:bg-surface-container-highest text-on-surface-variant transition-colors duration-200 active:scale-95"
-            >
-              <Icon name="notifications" />
-            </button>
-            <button
-              onClick={() => toast.info('Settings coming soon')}
-              className="p-base rounded-full hover:bg-surface-container-highest text-on-surface-variant transition-colors duration-200 active:scale-95"
-            >
-              <Icon name="settings" />
-            </button>
             <div className="w-10 h-10 rounded-full bg-surface-container-highest border border-outline-variant overflow-hidden ml-sm flex items-center justify-center">
               <Icon name="person" className="text-on-surface-variant" />
             </div>
